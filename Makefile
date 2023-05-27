@@ -15,7 +15,7 @@
 
 NAME ?= auger
 PKG ?= github.com/jpbetz/$(NAME)
-GO_VERSION ?= 1.16.5
+GO_VERSION ?= 1.19.9
 GOOS ?= linux
 GOARCH ?= amd64
 TEMP_DIR := $(shell mktemp -d)
@@ -42,7 +42,7 @@ release:
 		-v $(TEMP_DIR)/$(NAME):/go/src/$(PKG) \
 		-w /go/src/$(PKG) \
 		golang:$(GO_VERSION) \
-		/bin/bash -c "make -f /go/src/$(PKG)/Makefile release-docker-build GOARCH=$(GOARCH) GOOS=$(GOOS)"
+		/bin/bash -c "go mod tidy && make -f /go/src/$(PKG)/Makefile release-docker-build GOARCH=$(GOARCH) GOOS=$(GOOS)"
 	@mkdir -p build
 	@cp $(TEMP_DIR)/$(NAME)/$(NAME) build/$(NAME)
 	@echo build/$(NAME) built!
